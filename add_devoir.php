@@ -4,7 +4,7 @@ include "db.php";
 
 // Vérifier droit délégué
 if(!isset($_SESSION['role']) || $_SESSION['role'] != 'delegue'){
-    die("❌ Accès refusé");
+    die(" Accès refusé");
 }
 
 if(isset($_POST['submit'])){
