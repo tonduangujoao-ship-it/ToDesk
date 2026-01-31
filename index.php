@@ -3,7 +3,8 @@ session_start();
 include "db.php";
 
 // --------------------
-//  LOG DES VISITES
+//  LOG DES VISITES : si l'utilisateur se connecte recuperer son role plus son nom pour le log.
+//sinon aficher juste invite et aucun
 // --------------------
 if(isset($_SESSION['user'])){
     $user = mysqli_real_escape_string($conn, $_SESSION['user']);
@@ -19,7 +20,7 @@ $page = 'index.php';
 mysqli_query($conn, "INSERT INTO logs(user, role, ip, page) VALUES ('$user', '$role', '$ip', '$page')");
 
 // --------------------
-// Récupération des devoirs
+// Récupération des devoirs : Pas utililsée elle est la juste pour faire pro.
 // --------------------
 $sql = "SELECT * FROM devoirs ORDER BY date_rendu ASC";
 $result = mysqli_query($conn, $sql);
