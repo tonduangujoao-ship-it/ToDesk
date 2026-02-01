@@ -64,6 +64,7 @@ $result = mysqli_query($conn, $sql);
 
     <h1 class="text-center mb-2 text-primary">Classeur MMI</h1>
     <h4 class="text-center mb-4">Made By Joao Tonduangu</h4>
+    <h5 class="text-center mb-4">En poursuivant votre navigation sur ce site, vous acceptez l’utilisation de traceurs pour vous permettre l'utilisation de ToDesk<span style="color:red;"><br>Connectez-vous pour plus d'options</span></h5>
 
     <!-- BOUTON CORRIGER AU-DESSUS DU TABLEAU , Listes de Correction , et Ajouter devoirs -->
     <?php 
