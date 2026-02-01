@@ -1,18 +1,20 @@
-<?php 
+<?php  
 session_start();
 include "db.php";
 
 // --------------------
-//  LOG DES VISITES : si l'utilisateur se connecte recuperer son role plus son nom pour le log.
-//sinon aficher juste invite et aucun
+//  LOG DES VISITES : Pour voi qui se connectée 
 // --------------------
+//le site verifie si on se connectée , si oui il prend notre nom notre role
 if(isset($_SESSION['user'])){
-    $user = mysqli_real_escape_string($conn, $_SESSION['user']);
+    $user = mysqli_real_escape_string($conn, $_SESSION['user']); 
     $role = mysqli_real_escape_string($conn, $_SESSION['role']);
+//sinon il affiche juste invité et aucun dans la page de log
 } else {
     $user = 'invité';
     $role = 'aucun';
 }
+
 $ip = $_SERVER['REMOTE_ADDR'];
 $page = 'index.php';
 
@@ -20,7 +22,7 @@ $page = 'index.php';
 mysqli_query($conn, "INSERT INTO logs(user, role, ip, page) VALUES ('$user', '$role', '$ip', '$page')");
 
 // --------------------
-// Récupération des devoirs : Pas utililsée elle est la juste pour faire pro.
+// Récupération des devoirs : permet de trier les devoirs pars date de randu.
 // --------------------
 $sql = "SELECT * FROM devoirs ORDER BY date_rendu ASC";
 $result = mysqli_query($conn, $sql);
@@ -33,23 +35,26 @@ $result = mysqli_query($conn, $sql);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .logo{ display:block; margin:auto; width:180px; border-radius:10px; }
-        .logo2{ display:block; margin: left 5px; width:180px; border-radius:10px; position: absolute; top : -15%}
+        .logo2{ display:block; margin-left:5px; width:180px; border-radius:10px; position:absolute; top:-15%; }
     </style>
 </head>
 <body>
 
 <!-- Logo -->
- <header>
-<img src="sorbonne.png" alt="Logo Sorbonne" class="logo">
-<img src="logo.svg" alt ="logo" class="logo2">
+<header>
+    <img src="sorbonne.png" alt="Logo Sorbonne" class="logo">
+    <img src="logo.svg" alt="logo" class="logo2">
 </header>
+
 <div class="container my-4">
 
-    <!-- Barre de connexion -->
+    <!-- Bouton de connexion : il varie selon notre stauts , connecté ou non connexté -->
     <div class="d-flex justify-content-end mb-3">
         <?php
         if(isset($_SESSION['user'])){
-            echo "<span class='me-3'>Connecté en tant que <strong>".htmlspecialchars($_SESSION['user'])."</strong> (".htmlspecialchars($_SESSION['role']).")</span>";
+            echo "<span class='me-3'>Connecté en tant que <strong>"
+                . htmlspecialchars($_SESSION['user'])
+                . "</strong> (" . htmlspecialchars($_SESSION['role']) . ")</span>";
             echo "<a href='logout.php' class='btn btn-outline-danger btn-sm'>Déconnexion</a>";
         } else {
             echo "<a href='login.php' class='btn btn-outline-primary btn-sm'>Connexion</a>";
@@ -58,35 +63,25 @@ $result = mysqli_query($conn, $sql);
     </div>
 
     <h1 class="text-center mb-2 text-primary">Classeur MMI</h1>
-    <h2 class="text-center mb-4">Made By Joao Tonduangu</h2>
+    <h4 class="text-center mb-4">Made By Joao Tonduangu</h4>
 
-    <!-- BOUTONS CONVERTIR / CORRIGER pour élève + délégué -->
+    <!-- BOUTON CORRIGER AU-DESSUS DU TABLEAU , Listes de Correction , et Ajouter devoirs -->
     <?php 
-    if(isset($_SESSION['role'])){
-        $role = strtolower(trim($_SESSION['role']));
-        if($role == 'delegue' || $role == 'eleve'){
-            echo '
-            <div class="d-flex justify-content-between mb-3">
-                <a href="#" class="btn btn-primary">Convertir</a>
-                <a href="#" class="btn btn-secondary">Corriger</a>
-            </div>';
-        }
-    }
-    ?>
-
-    <!-- Bouton Ajouter (uniquement délégué) -->
-    <?php
-    if(isset($role) && $role == 'delegue'){
-        echo "<div class='text-center mb-3'>
-                <a href='add_devoir.php' class='btn btn-success'>Ajouter un devoir</a>
+    if(isset($role) && ($role == 'eleve')){
+        echo "<div class='d-flex justify-content-between mn-3'>
+                <a href='corriger.php' class='btn btn-secondary'>Corriger un texte</a>
+                <a href='historique_connexions.php' class='btn btn-info'>Historique des connexions</a>
               </div>";
-        // Lien vers l'historique des connexions
-        echo "<div class='text-center mb-3'>
+    }
+    if(isset($role) && ($role == 'delegue')){
+        echo "<div class='d-flex justify-content-between mn-3'>
+                <a href='corriger.php' class='btn btn-secondary'>Corriger un texte</a>
+                <a href='add_devoir.php' class='btn btn-success'>Ajouter un devoir</a>
                 <a href='historique_connexions.php' class='btn btn-info'>Historique des connexions</a>
               </div>";
     }
     ?>
-
+    <!--Tableau d'affichade de devoie -->
     <div class="table-responsive">
         <table class="table table-bordered table-hover">
             <thead class="table-light text-center">
@@ -98,35 +93,41 @@ $result = mysqli_query($conn, $sql);
                     <?php if(isset($role) && $role == 'delegue') echo "<th>Actions</th>"; ?>
                 </tr>
             </thead>
-
             <tbody>
-                <?php
-                if(mysqli_num_rows($result) > 0){
-                    while($row = mysqli_fetch_assoc($result)){
-                        echo "<tr>";
-                        echo "<td>".htmlspecialchars($row['titre'])."</td>";
-                        echo "<td class='text-center'>".htmlspecialchars($row['date_rendu'])."</td>";
-                        echo "<td>".htmlspecialchars($row['description'])."</td>";
-                        echo "<td class='text-center'>";
-                        if(!empty($row['fichier'])){
-                            echo "<a href='uploads/".htmlspecialchars($row['fichier'])."' target='_blank' class='btn btn-outline-secondary btn-sm'>Voir</a>";
-                        } else {
-                            echo "Aucun fichier";
-                        }
-                        echo "</td>";
-                        if(isset($role) && $role == 'delegue'){
-                            echo "<td class='text-center'>
-                                    <a href='edit.php?id=".$row['id']."' class='btn btn-warning btn-sm me-1'>Modifier</a>
-                                    <a href='delete.php?id=".$row['id']."' class='btn btn-danger btn-sm' onclick=\"return confirm('Supprimer ce devoir ?');\">Supprimer</a>
-                                  </td>";
-                        }
-                        echo "</tr>";
+            <?php
+            if(mysqli_num_rows($result) > 0){
+                while($row = mysqli_fetch_assoc($result)){
+                    echo "<tr>";
+                    echo "<td>".htmlspecialchars($row['titre'])."</td>";
+                    echo "<td class='text-center'>".htmlspecialchars($row['date_rendu'])."</td>";
+                    echo "<td>".htmlspecialchars($row['description'])."</td>";
+
+                    echo "<td class='text-center'>";
+                    if(!empty($row['fichier'])){
+                        echo "<a href='uploads/".htmlspecialchars($row['fichier'])."' 
+                                target='_blank' 
+                                class='btn btn-outline-secondary btn-sm'>Voir</a>";
+                    } else {
+                        echo "Aucun fichier";
                     }
-                } else {
-                    $colspan = (isset($role) && $role == 'delegue') ? 5 : 4;
-                    echo "<tr><td colspan='$colspan' class='text-center'>Aucun devoir disponible</td></tr>";
+                    echo "</td>";
+
+                    // Actions pour le délégué
+                    if(isset($role) && $role == 'delegue'){
+                        echo "<td class='text-center'>
+                                <a href='edit.php?id=".$row['id']."' class='btn btn-warning btn-sm me-1'>Modifier</a>
+                                <a href='delete.php?id=".$row['id']."' class='btn btn-danger btn-sm' 
+                                   onclick=\"return confirm('Supprimer ce devoir ?');\">Supprimer</a>
+                              </td>";
+                    }
+
+                    echo "</tr>";
                 }
-                ?>
+            } else {
+                $colspan = (isset($role) && $role == 'delegue') ? 5 : 4;
+                echo "<tr><td colspan='$colspan' class='text-center'>Aucun devoir disponible</td></tr>";
+            }
+            ?>
             </tbody>
         </table>
     </div>
@@ -136,8 +137,4 @@ $result = mysqli_query($conn, $sql);
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
-
-
-
 
