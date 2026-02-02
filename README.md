@@ -22,5 +22,6 @@ Etape 3 :
 
 Liers les casiers avec Chat gpt avec un API, pour que l'IA puisse nous generer de fiches de revisions et de control Blanc.
 
+Ajouter un outil de gestion de projet. comme gantt
 
 
