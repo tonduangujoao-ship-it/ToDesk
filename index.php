@@ -44,8 +44,10 @@ window.addEventListener('DOMContentLoaded', function() {
   
   if (theme === "dark") {
     document.body.style.backgroundColor = "black";
+    document.getElementById("themebut").src = "img/moon.svg";
   } else {
     document.body.style.backgroundColor = "white";
+    document.getElementById("themebut").src = "img/sun.svg";
   }
 });
 
@@ -56,9 +58,11 @@ function toggleTheme() {
   if (currentTheme === "dark") {
     localStorage.setItem("theme", "light");
     document.body.style.backgroundColor = "#ffffff";
+    document.getElementById("themebut").src = "img/sun.svg";
   } else {
     localStorage.setItem("theme", "dark");
     document.body.style.backgroundColor = "#222233";
+    document.getElementById("themebut").src = "img/moon.svg";
   }
 }
 </script>
@@ -162,7 +166,9 @@ function toggleTheme() {
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<div style="position:absolute; height:auto; width:10%; aspect-ratio:1/1; background:pink; bottom:0; left:0" onclick="toggleTheme()"></div>
+<div style="position:absolute; height:auto; width:10%; aspect-ratio:1/1; bottom:0; left:0">
+    <img src="img/sun.svg" onclick="toggleTheme()"  draggable="false"  id="themebut" style="height: auto; width: auto;" alt="music">
+</div>
 </body>
 </html>
 
