@@ -37,8 +37,33 @@ $result = mysqli_query($conn, $sql);
         .logo{ display:block; margin:auto; width:180px; border-radius:10px; }
         .logo2{ display:block; margin-left:5px; width:180px; border-radius:10px; position:absolute; top:-15%; }
     </style>
+    <script>
+    // Apply theme on page load
+window.addEventListener('DOMContentLoaded', function() {
+  const theme = localStorage.getItem("theme");
+  
+  if (theme === "dark") {
+    document.body.style.backgroundColor = "black";
+  } else {
+    document.body.style.backgroundColor = "white";
+  }
+});
+
+// Toggle function
+function toggleTheme() {
+  const currentTheme = localStorage.getItem("theme");
+  
+  if (currentTheme === "dark") {
+    localStorage.setItem("theme", "light");
+    document.body.style.backgroundColor = "#ffffff";
+  } else {
+    localStorage.setItem("theme", "dark");
+    document.body.style.backgroundColor = "#222233";
+  }
+}
+</script>
 </head>
-<body>
+<body style="background-color: white;">
 
 <!-- Logo -->
 <header>
@@ -136,6 +161,8 @@ $result = mysqli_query($conn, $sql);
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<div style="position:absolute; height:auto; width:10%; aspect-ratio:1/1; background:pink; bottom:0; left:0" onclick="toggleTheme()"></div>
 </body>
 </html>
 
