@@ -21,9 +21,16 @@ if(isset($_POST['submit'])){
         $fichier = time() . "_" . basename($_FILES["fichier"]["name"]);
         move_uploaded_file($_FILES["fichier"]["tmp_name"], "uploads/" . $fichier);
     }
+    $exemple= "";
 
-    $sql = "INSERT INTO devoirs (titre, date_rendu, description, fichier)
-            VALUES ('$titre', '$date_rendu', '$description', '$fichier')";
+    if(isset($_FILES['fichier']) && $_FILES['exemple']['error'] == 0){
+
+        $exemple = time() . "_" . basename($_FILES["exemple"]["name"]);
+        move_uploaded_file($_FILES["exemple"]["tmp_name"], "uploads/" . $exemple);
+    }
+
+    $sql = "INSERT INTO devoirs (titre, date_rendu, description, fichier, exemple)
+            VALUES ('$titre', '$date_rendu', '$description', '$fichier', '$exemple')";
 
     mysqli_query($conn, $sql);
 
@@ -60,6 +67,9 @@ if(isset($_POST['submit'])){
 
     <label class="form-label mt-3">Joindre un fichier</label>
     <input type="file" name="fichier" class="form-control">
+
+     <label class="form-label mt-3">Joindre un exemple</label>
+    <input type="file" name="exemple" class="form-control">
 
     <button type="submit" name="submit" class="btn btn-success mt-4">
         ✔ Enregistrer le devoir

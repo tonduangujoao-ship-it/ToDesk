@@ -22,26 +22,62 @@ if(!$devoir){
     die("Devoir introuvable");
 }
 
-// Si formulaire envoyé
+/* ----------------------------------------------------
+   Suppression du fichier
+---------------------------------------------------- */
+if(isset($_POST['delete_fichier'])){
+    if($devoir['fichier'] && file_exists("uploads/" . $devoir['fichier'])){
+        unlink("uploads/" . $devoir['fichier']);
+    }
+    mysqli_query($conn, "UPDATE devoirs SET fichier='' WHERE id=$id");
+    header("Location: edit.php?id=$id");
+    exit();
+}
+
+/* ----------------------------------------------------
+   Suppression de l'exemple
+---------------------------------------------------- */
+if(isset($_POST['delete_exemple'])){
+    if($devoir['exemple'] && file_exists("uploads/" . $devoir['exemple'])){
+        unlink("uploads/" . $devoir['exemple']);
+    }
+    mysqli_query($conn, "UPDATE devoirs SET exemple='' WHERE id=$id");
+    header("Location: edit.php?id=$id");
+    exit();
+}
+
+/* ----------------------------------------------------
+   Mise à jour du devoir
+---------------------------------------------------- */
 if(isset($_POST['update'])){
 
     $titre = trim($_POST['titre']);
     $date_rendu = $_POST['date_rendu'];
     $description = trim($_POST['description']);
+
+    // Valeurs actuelles
     $fichier = $devoir['fichier'];
+    $exemple = $devoir['exemple'];
 
     // Nouveau fichier ?
     if(isset($_FILES['fichier']) && $_FILES['fichier']['error'] == 0){
-
-        $fichier = time()."_".basename($_FILES["fichier"]["name"]);
-        move_uploaded_file($_FILES["fichier"]["tmp_name"], "uploads/".$fichier);
+        $fichier = time() . "_" . basename($_FILES["fichier"]["name"]);
+        move_uploaded_file($_FILES["fichier"]["tmp_name"], "uploads/" . $fichier);
     }
 
+    // Nouvel exemple ?
+    if(isset($_FILES['exemple']) && $_FILES['exemple']['error'] == 0){
+        $exemple = time() . "_" . basename($_FILES["exemple"]["name"]);
+        move_uploaded_file($_FILES["exemple"]["tmp_name"], "uploads/" . $exemple);
+    }
+
+    // Requête SQL
     $sql = "UPDATE devoirs SET 
             titre='$titre',
             date_rendu='$date_rendu',
             description='$description',
-            fichier='$fichier'
+            fichier='$fichier',
+            exemple='$exemple'
             WHERE id=$id";
 
     mysqli_query($conn, $sql);
@@ -50,7 +86,6 @@ if(isset($_POST['update'])){
     exit();
 }
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -77,19 +112,37 @@ if(isset($_POST['update'])){
     <label class="form-label mt-3">Description</label>
     <textarea name="description" class="form-control" rows="4"><?= $devoir['description'] ?></textarea>
 
+    <!-- FICHIER -->
     <p class="mt-3">
         Fichier actuel :
-        <?php
-        if($devoir['fichier']){
-            echo "<a href='uploads/".$devoir['fichier']."' target='_blank'>".$devoir['fichier']."</a>";
-        } else {
-            echo "Aucun fichier";
-        }
-        ?>
+        <?php if($devoir['fichier']){ ?>
+            <a href="uploads/<?= $devoir['fichier'] ?>" target="_blank"><?= $devoir['fichier'] ?></a>
+
+            <button type="submit" name="delete_fichier" class="btn btn-danger btn-sm ms-2"
+                onclick="return confirm('Supprimer le fichier actuel ?')">
+                Supprimer
+            </button>
+        <?php } else { echo "Aucun fichier"; } ?>
     </p>
 
     <label class="form-label">Nouveau fichier (optionnel)</label>
     <input type="file" name="fichier" class="form-control">
+
+    <!-- EXEMPLE -->
+    <p class="mt-3">
+        Exemple actuel :
+        <?php if($devoir['exemple']){ ?>
+            <a href="uploads/<?= $devoir['exemple'] ?>" target="_blank"><?= $devoir['exemple'] ?></a>
+
+            <button type="submit" name="delete_exemple" class="btn btn-danger btn-sm ms-2"
+                onclick="return confirm('Supprimer l\'exemple actuel ?')">
+                Supprimer
+            </button>
+        <?php } else { echo "Aucun fichier"; } ?>
+    </p>
+
+    <label class="form-label">Nouvel Exemple (optionnel)</label>
+    <input type="file" name="exemple" class="form-control">
 
     <button type="submit" name="update" class="btn btn-warning mt-4">
         ✔ Enregistrer les modifications
@@ -100,4 +153,3 @@ if(isset($_POST['update'])){
 </div>
 </body>
 </html>
-
