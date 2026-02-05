@@ -33,14 +33,43 @@ $result = mysqli_query($conn, $sql);
     <meta charset="UTF-8">
     <title>Classeur de Devoirs</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        .logo{ display:block; margin:auto; width:180px; border-radius:10px; }
-        .logo2{ display:block; margin-left:5px; width:180px; border-radius:10px; position:absolute; top:-15%; }
-    </style>
+<style>
+    header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        padding: 10px 0;
+    }
+
+    .logo {
+        width: 180px;
+        max-width: 40vw;
+        border-radius: 10px;
+    }
+
+    .logo2 {
+        position: absolute;
+        left: 10px;
+        width: 150px;
+        max-width: 30vw;
+        border-radius: 10px;
+    }
+
+    @media (max-width: 600px) {
+        .logo {
+            width: 130px;
+        }
+
+        .logo2 {
+            width: 90px;
+            left: 5px;
+        }
+    }
+</style>
 </head>
 <body>
 
-<!-- Logo -->
 <header>
     <img src="sorbonne.png" alt="Logo Sorbonne" class="logo">
     <img src="logo.svg" alt="logo" class="logo2">

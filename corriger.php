@@ -11,7 +11,7 @@
     <h2 class="text-center mb-4">Correction Sans ChatGPT </h2>
     <h4 class="text-center mb-4"><span style="color:red;">Comment utiliser : </span>Le correcteur ne fait pas le travail à ta place, 
     il t'affiche les erreurs et tu dois cliquer dessus pour les corriger selon ton besoin. 
-    <span style="color:red;">De tête trop grande à éviter</span> et <span style="color:red;">Le Correcteur peut commettre des erreurs</span>.
+    <span style="color:red;">De texte trop grande à éviter</span> et <span style="color:red;">Le Correcteur peut commettre des erreurs</span>.
     </h4>
 
     <div class="mb-3">

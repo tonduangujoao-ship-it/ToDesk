@@ -7,7 +7,7 @@ if(isset($_POST['login'])){
     $username = trim($_POST['username']);
     $password = trim($_POST['password']);
 
-    // 🔹 Requête préparée pour sécurité minimale
+    //  Requête préparée pour sécurité minimale
     $stmt = $conn->prepare("SELECT id, username, password, role FROM users WHERE username = ? LIMIT 1");
     $stmt->bind_param("s", $username);
     $stmt->execute();
@@ -20,9 +20,10 @@ if(isset($_POST['login'])){
     if($result->num_rows == 1){
         $user = $result->fetch_assoc();
 
-        // 🔥 Vérification STRICTE du mot de passe
+        //  Vérification STRICTE du mot de passe
         if($password === $user['password']){
             // Enregistre la session
+            //$_SESSION['user_id']=$user['user_id'];
             $_SESSION['user'] = $user['username'];
             $_SESSION['role'] = trim(strtolower($user['role']));
 
