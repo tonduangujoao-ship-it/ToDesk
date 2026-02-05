@@ -35,6 +35,53 @@ $result = mysqli_query($conn, $sql);
         .logo { display:block; margin:auto; width:180px; border-radius:10px; }
         .logo2 { display:block; margin-left:5px; width:180px; border-radius:10px; position:absolute; top:-15%; }
     </style>
+    <!-- JS pour changer de theme-->
+        <script>
+window.addEventListener('DOMContentLoaded', function() {
+  const theme = localStorage.getItem("theme");
+  
+  if (theme === "dark") {
+    document.body.style.backgroundColor = "black";
+    document.getElementById("themebut").src = "img/moon.svg";
+    applyThemeToClass("dark");
+  } else {
+    document.body.style.backgroundColor = "white";
+    document.getElementById("themebut").src = "img/sun.svg";
+    applyThemeToClass("light");
+  }
+});
+
+function toggleTheme() {
+  const currentTheme = localStorage.getItem("theme");
+  
+  if (currentTheme === "dark") {
+    localStorage.setItem("theme", "light");
+    document.body.style.backgroundColor = "#ffffff";
+    document.getElementById("themebut").src = "img/sun.svg";
+    applyThemeToClass("light");
+  } else {
+    localStorage.setItem("theme", "dark");
+    document.body.style.backgroundColor = "#222233";
+    document.getElementById("themebut").src = "img/moon.svg";
+    applyThemeToClass("dark");
+  }
+}
+
+// applique le theme aux éléments qui ont une certaine class
+function applyThemeToClass(theme) {
+  const elements = document.querySelectorAll(".texttheme");
+  
+  elements.forEach(element => {
+    if (theme === "dark") {
+      element.style.color = "white"; 
+      element.style.backgroundColor = "#222233"; 
+    } else {
+      element.style.color = "black"; 
+      element.style.backgroundColor = "#ffffff"; 
+    }
+  });
+}
+</script>
 </head>
 
 <body style="background-color: white;">
@@ -60,9 +107,9 @@ $result = mysqli_query($conn, $sql);
         ?>
     </div>
 
-    <h1 class="text-center mb-2 text-primary">Classeur MMI</h1>
-    <h4 class="text-center mb-4">Made By Joao Tonduangu</h4>
-    <h5 class="text-center mb-4">
+    <h1 class="text-center mb-2 text-primary texttheme">Classeur MMI</h1>
+    <h4 class="text-center mb-4 texttheme">Made By Joao Tonduangu</h4>
+    <h5 class="text-center mb-4 texttheme">
         En poursuivant votre navigation sur ce site, vous acceptez l’utilisation de traceurs pour vous permettre l'utilisation de ToDesk
         <span style="color:red;"><br>Connectez-vous pour plus d'options</span>
     </h5>
@@ -92,11 +139,11 @@ $result = mysqli_query($conn, $sql);
         <table class="table table-bordered table-hover">
             <thead class="table-light text-center">
                 <tr>
-                    <th>Titre</th>
-                    <th>Date de rendu</th>
-                    <th>Description</th>
-                    <th>Fichier</th>
-                    <th>Exemple</th>
+                    <th class="texttheme">Titre</th>
+                    <th class="texttheme">Date de rendu</th>
+                    <th class="texttheme">Description</th>
+                    <th class="texttheme">Fichier</th>
+                    <th class="texttheme">Exemple</th>
                     <?php if ($role == 'delegue') echo "<th>Actions</th>"; ?>
                 </tr>
             </thead>
@@ -158,9 +205,9 @@ $result = mysqli_query($conn, $sql);
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<!--<div style="position:absolute; height:auto; width:10%; aspect-ratio:1/1; bottom:0; left:0">
+<div style="position:absolute; height:auto; width:10%; aspect-ratio:1/1; bottom:0; left:0">
     <img src="img/sun.svg" onclick="toggleTheme()" draggable="false" id="themebut" style="height:auto; width:auto;" alt="music">
-</div> -->
+</div> 
 
 </body>
 </html>

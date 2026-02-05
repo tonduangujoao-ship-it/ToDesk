@@ -38,6 +38,53 @@ if(isset($_POST['submit'])){
 <head>
     <meta charset="UTF-8">
     <title>Upload de DOCX</title>
+       <!-- JS pour changer de theme-->
+        <script>
+window.addEventListener('DOMContentLoaded', function() {
+  const theme = localStorage.getItem("theme");
+  
+  if (theme === "dark") {
+    document.body.style.backgroundColor = "black";
+    document.getElementById("themebut").src = "img/moon.svg";
+    applyThemeToClass("dark");
+  } else {
+    document.body.style.backgroundColor = "white";
+    document.getElementById("themebut").src = "img/sun.svg";
+    applyThemeToClass("light");
+  }
+});
+
+function toggleTheme() {
+  const currentTheme = localStorage.getItem("theme");
+  
+  if (currentTheme === "dark") {
+    localStorage.setItem("theme", "light");
+    document.body.style.backgroundColor = "#ffffff";
+    document.getElementById("themebut").src = "img/sun.svg";
+    applyThemeToClass("light");
+  } else {
+    localStorage.setItem("theme", "dark");
+    document.body.style.backgroundColor = "#222233";
+    document.getElementById("themebut").src = "img/moon.svg";
+    applyThemeToClass("dark");
+  }
+}
+
+// applique le theme aux éléments qui ont une certaine class
+function applyThemeToClass(theme) {
+  const elements = document.querySelectorAll(".texttheme");
+  
+  elements.forEach(element => {
+    if (theme === "dark") {
+      element.style.color = "white"; 
+      element.style.backgroundColor = "#222233"; 
+    } else {
+      element.style.color = "black"; 
+      element.style.backgroundColor = "#ffffff"; 
+    }
+  });
+}
+</script>
 </head>
 <body>
     <h1 style="text-align:center;">Upload de fichier DOCX</h1>
@@ -47,5 +94,8 @@ if(isset($_POST['submit'])){
         <input type="submit" name="submit" value="Uploader">
     </form>
     <p style="text-align:center;"><a href="index.php">Retour à la liste des devoirs</a></p>
+    <div style="position:absolute; height:auto; width:10%; aspect-ratio:1/1; bottom:0; left:0">
+    <img src="img/sun.svg" onclick="toggleTheme()" draggable="false" id="themebut" style="height:auto; width:auto;" alt="music">
+</div>
 </body>
 </html>
