@@ -9,9 +9,9 @@ if(!isset($_SESSION['role']) || $_SESSION['role'] != 'delegue'){
 
 if(isset($_POST['submit'])){
 
-    $titre = trim($_POST['titre']);
+    $titre = htmlspecialchars_decode(trim($_POST['titre']), ENT_QUOTES);
     $date_rendu = $_POST['date_rendu'];
-    $description = trim($_POST['description']);
+    $description = htmlspecialchars_decode(trim($_POST['description']), ENT_QUOTES);
 
     // Gestion fichier
     $fichier = "";

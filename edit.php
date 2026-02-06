@@ -51,9 +51,9 @@ if(isset($_POST['delete_exemple'])){
 ---------------------------------------------------- */
 if(isset($_POST['update'])){
 
-    $titre = trim($_POST['titre']);
+    $titre = htmlspecialchars_decode(trim($_POST['titre']), ENT_QUOTES);
     $date_rendu = $_POST['date_rendu'];
-    $description = trim($_POST['description']);
+    $description = htmlspecialchars_decode(trim($_POST['description']), ENT_QUOTES);
 
     // Valeurs actuelles
     $fichier = $devoir['fichier'];
