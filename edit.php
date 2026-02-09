@@ -2,9 +2,8 @@
 session_start();
 include "db.php";
 
-// Vérifier droit délégué
 if(!isset($_SESSION['role']) || $_SESSION['role'] != 'delegue'){
-    die(" Accès refusé");
+    die("Accès refusé");
 }
 
 if(!isset($_GET['id'])){
@@ -14,9 +13,10 @@ if(!isset($_GET['id'])){
 $id = intval($_GET['id']);
 
 // Charger devoir
-$sql = "SELECT * FROM devoirs WHERE id=$id LIMIT 1";
-$result = mysqli_query($conn, $sql);
-$devoir = mysqli_fetch_assoc($result);
+$stmt = $conn->prepare("SELECT * FROM devoirs WHERE id=? LIMIT 1");
+$stmt->bind_param("i", $id);
+$stmt->execute();
+$devoir = $stmt->get_result()->fetch_assoc();
 
 if(!$devoir){
     die("Devoir introuvable");
@@ -29,7 +29,11 @@ if(isset($_POST['delete_fichier'])){
     if($devoir['fichier'] && file_exists("uploads/" . $devoir['fichier'])){
         unlink("uploads/" . $devoir['fichier']);
     }
-    mysqli_query($conn, "UPDATE devoirs SET fichier='' WHERE id=$id");
+
+    $stmt = $conn->prepare("UPDATE devoirs SET fichier='' WHERE id=?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+
     header("Location: edit.php?id=$id");
     exit();
 }
@@ -41,7 +45,11 @@ if(isset($_POST['delete_exemple'])){
     if($devoir['exemple'] && file_exists("uploads/" . $devoir['exemple'])){
         unlink("uploads/" . $devoir['exemple']);
     }
-    mysqli_query($conn, "UPDATE devoirs SET exemple='' WHERE id=$id");
+
+    $stmt = $conn->prepare("UPDATE devoirs SET exemple='' WHERE id=?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+
     header("Location: edit.php?id=$id");
     exit();
 }
@@ -51,9 +59,9 @@ if(isset($_POST['delete_exemple'])){
 ---------------------------------------------------- */
 if(isset($_POST['update'])){
 
-    $titre = htmlspecialchars_decode(trim($_POST['titre']), ENT_QUOTES);
+    $titre = trim($_POST['titre']);
     $date_rendu = $_POST['date_rendu'];
-    $description = htmlspecialchars_decode(trim($_POST['description']), ENT_QUOTES);
+    $description = trim($_POST['description']);
 
     // Valeurs actuelles
     $fichier = $devoir['fichier'];
@@ -71,16 +79,15 @@ if(isset($_POST['update'])){
         move_uploaded_file($_FILES["exemple"]["tmp_name"], "uploads/" . $exemple);
     }
 
-    // Requête SQL
-    $sql = "UPDATE devoirs SET 
-            titre='$titre',
-            date_rendu='$date_rendu',
-            description='$description',
-            fichier='$fichier',
-            exemple='$exemple'
-            WHERE id=$id";
+    // Requête préparée
+    $stmt = $conn->prepare("
+        UPDATE devoirs
+        SET titre=?, date_rendu=?, description=?, fichier=?, exemple=?
+        WHERE id=?
+    ");
 
-    mysqli_query($conn, $sql);
+    $stmt->bind_param("sssssi", $titre, $date_rendu, $description, $fichier, $exemple, $id);
+    $stmt->execute();
 
     header("Location: index.php");
     exit();
@@ -93,74 +100,82 @@ if(isset($_POST['update'])){
 <title>Modifier un devoir</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
    <!-- JS pour changer de theme-->
-        <script>
+</head>
+<script>
 window.addEventListener('DOMContentLoaded', function() {
-  const theme = localStorage.getItem("theme");
-  
-  if (theme === "dark") {
-    document.body.style.backgroundColor = "black";
-    document.getElementById("themebut").src = "img/moon.svg";
-    applyThemeToClass("dark");
-  } else {
-    document.body.style.backgroundColor = "white";
-    document.getElementById("themebut").src = "img/sun.svg";
-    applyThemeToClass("light");
-  }
+  const theme = localStorage.getItem("theme") || "light";
+
+  applyTheme(theme);
 });
 
 function toggleTheme() {
-  const currentTheme = localStorage.getItem("theme");
-  
-  if (currentTheme === "dark") {
-    localStorage.setItem("theme", "light");
-    document.body.style.backgroundColor = "#ffffff";
-    document.getElementById("themebut").src = "img/sun.svg";
-    applyThemeToClass("light");
-  } else {
-    localStorage.setItem("theme", "dark");
-    document.body.style.backgroundColor = "#222233";
-    document.getElementById("themebut").src = "img/moon.svg";
+  const currentTheme = localStorage.getItem("theme") || "light";
+  const newTheme = (currentTheme === "dark") ? "light" : "dark";
+
+  localStorage.setItem("theme", newTheme);
+  applyTheme(newTheme);
+}
+
+// applique le theme global
+function applyTheme(theme) {
+
+  const themeBtn = document.getElementById("themebut");
+
+  // Sécurité : taille fixe du bouton (évite l’icône géante)
+  themeBtn.style.width = "60px";
+  themeBtn.style.height = "60px";
+  themeBtn.style.cursor = "pointer";
+
+  if (theme === "dark") {
+    document.body.style.backgroundColor = "#1e1e2f";
+    document.body.style.color = "#ffffff";
+    themeBtn.src = "img/moon.svg";
     applyThemeToClass("dark");
+  } else {
+    document.body.style.backgroundColor = "#ffffff";
+    document.body.style.color = "#000000";
+    themeBtn.src = "img/sun.svg";
+    applyThemeToClass("light");
   }
 }
 
 // applique le theme aux éléments qui ont une certaine class
 function applyThemeToClass(theme) {
   const elements = document.querySelectorAll(".texttheme");
-  
+
   elements.forEach(element => {
     if (theme === "dark") {
-      element.style.color = "white"; 
-      element.style.backgroundColor = "#222233"; 
+      element.style.color = "#ffffff";
+      element.style.backgroundColor = "transparent";
     } else {
-      element.style.color = "black"; 
-      element.style.backgroundColor = "#ffffff"; 
+      element.style.color = "#000000";
+      element.style.backgroundColor = "transparent";
     }
   });
 }
 </script>
-</head>
+
 
 <body>
-<div class="container mt-4">
+<div class="container mt-4 texttheme">
 
-<h2 class="text-warning text-center mb-4">✏ Modifier le devoir</h2>
+<h2 class="text-warning text-center mb-4 texttheme">✏ Modifier le devoir</h2>
 
 <a href="index.php" class="btn btn-secondary mb-3">⬅ Retour</a>
 
-<form method="post" enctype="multipart/form-data" class="card p-4 shadow">
+<form method="post" enctype="multipart/form-data" class="card p-4 shadow texttheme">
 
-    <label class="form-label">Titre</label>
-    <input type="text" name="titre" class="form-control" value="<?= $devoir['titre'] ?>" required>
+    <label class="form-label texttheme">Titre</label>
+    <input type="text" name="titre" class="form-control texttheme" value="<?= $devoir['titre'] ?>" required>
 
-    <label class="form-label mt-3">Date de rendu</label>
-    <input type="date" name="date_rendu" class="form-control" value="<?= $devoir['date_rendu'] ?>" required>
+    <label class="form-label mt-3 texttheme">Date de rendu</label>
+    <input type="date" name="date_rendu" class="form-control texttheme" value="<?= $devoir['date_rendu'] ?>" required>
 
-    <label class="form-label mt-3">Description</label>
-    <textarea name="description" class="form-control" rows="4"><?= $devoir['description'] ?></textarea>
+    <label class="form-label mt-3 texttheme">Description</label>
+    <textarea name="description" class="form-control texttheme" rows="4"><?= $devoir['description'] ?></textarea>
 
     <!-- FICHIER -->
-    <p class="mt-3">
+    <p class="mt-3 texttheme">
         Fichier actuel :
         <?php if($devoir['fichier']){ ?>
             <a href="uploads/<?= $devoir['fichier'] ?>" target="_blank"><?= $devoir['fichier'] ?></a>
@@ -172,11 +187,11 @@ function applyThemeToClass(theme) {
         <?php } else { echo "Aucun fichier"; } ?>
     </p>
 
-    <label class="form-label">Nouveau fichier (optionnel)</label>
-    <input type="file" name="fichier" class="form-control">
+    <label class="form-label texttheme">Nouveau fichier (optionnel)</label>
+    <input type="file" name="fichier" class="form-control texttheme">
 
     <!-- EXEMPLE -->
-    <p class="mt-3">
+    <p class="mt-3 texttheme">
         Exemple actuel :
         <?php if($devoir['exemple']){ ?>
             <a href="uploads/<?= $devoir['exemple'] ?>" target="_blank"><?= $devoir['exemple'] ?></a>
@@ -189,7 +204,7 @@ function applyThemeToClass(theme) {
     </p>
 
     <label class="form-label">Nouvel Exemple (optionnel)</label>
-    <input type="file" name="exemple" class="form-control">
+    <input type="file" name="exemple" class="form-control texttheme">
 
     <button type="submit" name="update" class="btn btn-warning mt-4">
         ✔ Enregistrer les modifications
@@ -198,7 +213,8 @@ function applyThemeToClass(theme) {
 </form>
 
 </div>
-<div style="position:absolute; height:auto; width:10%; aspect-ratio:1/1; bottom:0; left:0">
+
+<div style="position:absolute; top:3%; right:5%;">
     <img src="img/sun.svg" onclick="toggleTheme()" draggable="false" id="themebut" style="height:auto; width:auto;" alt="music">
 </div>
 </body>

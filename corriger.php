@@ -5,65 +5,74 @@
 <title>Correction automatique</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
    <!-- JS pour changer de theme-->
-        <script>
+<!-- JS pour changer de theme-->
+<script>
 window.addEventListener('DOMContentLoaded', function() {
-  const theme = localStorage.getItem("theme");
-  
-  if (theme === "dark") {
-    document.body.style.backgroundColor = "black";
-    document.getElementById("themebut").src = "img/moon.svg";
-    applyThemeToClass("dark");
-  } else {
-    document.body.style.backgroundColor = "white";
-    document.getElementById("themebut").src = "img/sun.svg";
-    applyThemeToClass("light");
-  }
+  const theme = localStorage.getItem("theme") || "light";
+
+  applyTheme(theme);
 });
 
 function toggleTheme() {
-  const currentTheme = localStorage.getItem("theme");
-  
-  if (currentTheme === "dark") {
-    localStorage.setItem("theme", "light");
-    document.body.style.backgroundColor = "#ffffff";
-    document.getElementById("themebut").src = "img/sun.svg";
-    applyThemeToClass("light");
-  } else {
-    localStorage.setItem("theme", "dark");
-    document.body.style.backgroundColor = "#222233";
-    document.getElementById("themebut").src = "img/moon.svg";
+  const currentTheme = localStorage.getItem("theme") || "light";
+  const newTheme = (currentTheme === "dark") ? "light" : "dark";
+
+  localStorage.setItem("theme", newTheme);
+  applyTheme(newTheme);
+}
+
+// applique le theme global
+function applyTheme(theme) {
+
+  const themeBtn = document.getElementById("themebut");
+
+  // Sécurité : taille fixe du bouton (évite l’icône géante)
+  themeBtn.style.width = "60px";
+  themeBtn.style.height = "60px";
+  themeBtn.style.cursor = "pointer";
+
+  if (theme === "dark") {
+    document.body.style.backgroundColor = "#1e1e2f";
+    document.body.style.color = "#ffffff";
+    themeBtn.src = "img/moon.svg";
     applyThemeToClass("dark");
+  } else {
+    document.body.style.backgroundColor = "#ffffff";
+    document.body.style.color = "#000000";
+    themeBtn.src = "img/sun.svg";
+    applyThemeToClass("light");
   }
 }
 
 // applique le theme aux éléments qui ont une certaine class
 function applyThemeToClass(theme) {
   const elements = document.querySelectorAll(".texttheme");
-  
+
   elements.forEach(element => {
     if (theme === "dark") {
-      element.style.color = "white"; 
-      element.style.backgroundColor = "#222233"; 
+      element.style.color = "#ffffff";
+      element.style.backgroundColor = "transparent";
     } else {
-      element.style.color = "black"; 
-      element.style.backgroundColor = "#ffffff"; 
+      element.style.color = "#000000";
+      element.style.backgroundColor = "transparent";
     }
   });
 }
 </script>
-</head>
-<body class="bg-light">
 
-<div class="container my-5">
-    <h2 class="text-center mb-4">Correction Sans ChatGPT </h2>
-    <h4 class="text-center mb-4"><span style="color:red;">Comment utiliser : </span>Le correcteur ne fait pas le travail à ta place, 
+</head>
+<body>
+
+<div class="container my-5 texttheme">
+    <h2 class="text-center mb-4 texttheme">Correction Sans ChatGPT </h2>
+    <h4 class="text-center mb-4 texttheme"><span style="color:red;">Comment utiliser : </span>Le correcteur ne fait pas le travail à ta place, 
     il t'affiche les erreurs et tu dois cliquer dessus pour les corriger selon ton besoin. 
     <span style="color:red;">De texte trop grande à éviter</span> et <span style="color:red;">Le Correcteur peut commettre des erreurs</span>.
     </h4>
 
-    <div class="mb-3">
+    <div class="mb-3 textheme">
         <label class="form-label">Colle ton texte ici :</label>
-        <textarea id="texte" class="form-control" rows="8"></textarea>
+        <textarea id="texte" class="form-control texttheme" rows="8"></textarea>
     </div>
 
     <button id="analyser" class="btn btn-primary">Analyser</button>
@@ -71,8 +80,8 @@ function applyThemeToClass(theme) {
 
     <hr>
 
-    <h4>Erreurs détectées :</h4>
-    <ul id="erreurs" class="list-group"></ul>
+    <h4 class="textheme">Erreurs détectées :</h4>
+    <ul id="erreurs" class="list-group textheme"></ul>
 </div>
 
 <script>
@@ -119,7 +128,7 @@ function afficherErreurs(matches) {
     matches.forEach(match => {
 
         const li = document.createElement("li");
-        li.className = "list-group-item";
+        li.className = "list-group-item texttheme";
 
         li.innerHTML = `
             <strong>Erreur :</strong> ${match.message}<br>
@@ -170,7 +179,7 @@ document.getElementById("copier").addEventListener("click", () => {
     alert("Texte corrigé copié ✅");
 });
 </script>
-<div style="position:absolute; height:auto; width:10%; aspect-ratio:1/1; bottom:0; left:0">
+<div style="position:absolute; top:3%; right:5%;">
     <img src="img/sun.svg" onclick="toggleTheme()" draggable="false" id="themebut" style="height:auto; width:auto;" alt="music">
 </div>
 </body>

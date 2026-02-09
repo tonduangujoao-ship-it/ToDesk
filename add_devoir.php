@@ -2,37 +2,38 @@
 session_start();
 include "db.php";
 
-// Vérifier droit délégué
 if(!isset($_SESSION['role']) || $_SESSION['role'] != 'delegue'){
-    die(" Accès refusé");
+    die("Accès refusé");
 }
 
 if(isset($_POST['submit'])){
 
-    $titre = htmlspecialchars_decode(trim($_POST['titre']), ENT_QUOTES);
+    $titre = trim($_POST['titre']);
     $date_rendu = $_POST['date_rendu'];
-    $description = htmlspecialchars_decode(trim($_POST['description']), ENT_QUOTES);
+    $description = trim($_POST['description']);
 
     // Gestion fichier
     $fichier = "";
-
     if(isset($_FILES['fichier']) && $_FILES['fichier']['error'] == 0){
-
         $fichier = time() . "_" . basename($_FILES["fichier"]["name"]);
         move_uploaded_file($_FILES["fichier"]["tmp_name"], "uploads/" . $fichier);
     }
-    $exemple= "";
 
-    if(isset($_FILES['fichier']) && $_FILES['exemple']['error'] == 0){
-
+    // Gestion exemple 
+    $exemple = "";
+    if(isset($_FILES['exemple']) && $_FILES['exemple']['error'] == 0){
         $exemple = time() . "_" . basename($_FILES["exemple"]["name"]);
         move_uploaded_file($_FILES["exemple"]["tmp_name"], "uploads/" . $exemple);
     }
 
-    $sql = "INSERT INTO devoirs (titre, date_rendu, description, fichier, exemple)
-            VALUES ('$titre', '$date_rendu', '$description', '$fichier', '$exemple')";
+    // Requête préparée
+    $stmt = $conn->prepare("
+        INSERT INTO devoirs (titre, date_rendu, description, fichier, exemple)
+        VALUES (?, ?, ?, ?, ?)
+    ");
 
-    mysqli_query($conn, $sql);
+    $stmt->bind_param("sssss", $titre, $date_rendu, $description, $fichier, $exemple);
+    $stmt->execute();
 
     header("Location: index.php");
     exit();

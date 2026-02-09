@@ -31,57 +31,69 @@ $result = mysqli_query($conn, $sql);
     <meta charset="UTF-8">
     <title>Classeur de Devoirs</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="CSS/core.css" rel="stylesheet">
     <style>
+        .bt{ position:relative; left: 4%;}
         .logo { display:block; margin:auto; width:180px; border-radius:10px; }
         .logo2 { display:block; margin-left:5px; width:180px; border-radius:10px; position:absolute; top:-15%; }
     </style>
     <!-- JS pour changer de theme-->
-        <script>
+<!-- JS pour changer de theme-->
+<script>
 window.addEventListener('DOMContentLoaded', function() {
-  const theme = localStorage.getItem("theme");
-  
-  if (theme === "dark") {
-    document.body.style.backgroundColor = "black";
-    document.getElementById("themebut").src = "img/moon.svg";
-    applyThemeToClass("dark");
-  } else {
-    document.body.style.backgroundColor = "white";
-    document.getElementById("themebut").src = "img/sun.svg";
-    applyThemeToClass("light");
-  }
+  const theme = localStorage.getItem("theme") || "light";
+
+  applyTheme(theme);
 });
 
 function toggleTheme() {
-  const currentTheme = localStorage.getItem("theme");
-  
-  if (currentTheme === "dark") {
-    localStorage.setItem("theme", "light");
-    document.body.style.backgroundColor = "#ffffff";
-    document.getElementById("themebut").src = "img/sun.svg";
-    applyThemeToClass("light");
-  } else {
-    localStorage.setItem("theme", "dark");
-    document.body.style.backgroundColor = "#222233";
-    document.getElementById("themebut").src = "img/moon.svg";
+  const currentTheme = localStorage.getItem("theme") || "light";
+  const newTheme = (currentTheme === "dark") ? "light" : "dark";
+
+  localStorage.setItem("theme", newTheme);
+  applyTheme(newTheme);
+}
+
+// applique le theme global
+function applyTheme(theme) {
+
+  const themeBtn = document.getElementById("themebut");
+
+  // Sécurité : taille fixe du bouton (évite l’icône géante)
+  themeBtn.style.width = "60px";
+  themeBtn.style.height = "60px";
+  themeBtn.style.cursor = "pointer";
+
+  if (theme === "dark") {
+    document.body.style.backgroundColor = "#1e1e2f";
+    document.body.style.color = "#ffffff";
+    themeBtn.src = "img/moon.svg";
     applyThemeToClass("dark");
+  } else {
+    document.body.style.backgroundColor = "#ffffff";
+    document.body.style.color = "#000000";
+    themeBtn.src = "img/sun.svg";
+    applyThemeToClass("light");
   }
 }
 
 // applique le theme aux éléments qui ont une certaine class
 function applyThemeToClass(theme) {
   const elements = document.querySelectorAll(".texttheme");
-  
+
   elements.forEach(element => {
     if (theme === "dark") {
-      element.style.color = "white"; 
-      element.style.backgroundColor = "#222233"; 
+      element.style.color = "#ffffff";
+      element.style.backgroundColor = "transparent";
     } else {
-      element.style.color = "black"; 
-      element.style.backgroundColor = "#ffffff"; 
+      element.style.color = "#000000";
+      element.style.backgroundColor = "transparent";
     }
   });
 }
 </script>
+
+
 </head>
 
 <body style="background-color: white;">
@@ -144,7 +156,7 @@ function applyThemeToClass(theme) {
                     <th class="texttheme">Description</th>
                     <th class="texttheme">Fichier</th>
                     <th class="texttheme">Exemple</th>
-                    <?php if ($role == 'delegue') echo "<th>Actions</th>"; ?>
+                    <?php if ($role == 'delegue') echo "<th class='texttheme'>Actions</th>"; ?>
                 </tr>
             </thead>
 
@@ -155,12 +167,13 @@ function applyThemeToClass(theme) {
 
                     echo "<tr>";
 
-                    echo "<td>" . htmlspecialchars($row['titre']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['date_rendu']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['description']) . "</td>";
+                   echo "<td class='texttheme'>" . htmlspecialchars($row['titre']) . "</td>";
+                   echo "<td class='texttheme'>" . htmlspecialchars($row['date_rendu']) . "</td>";
+                   echo "<td class='texttheme'>" . htmlspecialchars($row['description']) . "</td>";
+
 
                     // Colonne Fichier
-                    echo "<td class='text-center'>";
+                    echo "<td class='text-center texttheme'>";
                     if (!empty($row['fichier'])) {
                         echo "<a href='uploads/" . htmlspecialchars($row['fichier']) . "' 
                                 target='_blank' 
@@ -171,7 +184,7 @@ function applyThemeToClass(theme) {
                     echo "</td>";
 
                     // Colonne Exemple
-                    echo "<td class='text-center'>";
+                    echo "<td class='text-center texttheme'>";
                     if (!empty($row['exemple'])) {
                         echo "<a href='uploads/" . htmlspecialchars($row['exemple']) . "' 
                                 target='_blank' 
@@ -183,7 +196,7 @@ function applyThemeToClass(theme) {
 
                     // Actions délégué
                     if ($role == 'delegue') {
-                        echo "<td class='text-center'>
+                        echo "<td class='text-center texttheme'>
                                 <a href='edit.php?id=" . $row['id'] . "' class='btn btn-warning btn-sm me-1'>Modifier</a>
                                 <a href='delete.php?id=" . $row['id'] . "' class='btn btn-danger btn-sm'
                                    onclick=\"return confirm('Supprimer ce devoir ?');\">Supprimer</a>
@@ -205,9 +218,16 @@ function applyThemeToClass(theme) {
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<div style="position:absolute; height:auto; width:10%; aspect-ratio:1/1; bottom:0; left:0">
+<div style="position:absolute; top:3%; right:5%;">
     <img src="img/sun.svg" onclick="toggleTheme()" draggable="false" id="themebut" style="height:auto; width:auto;" alt="music">
 </div> 
+
+<?php if ($role === 'delegue'): ?>
+    <a href="verif_gestion.php" class="btn btn-warning mt-3 bt">
+        Gestion de classe
+    </a>
+<?php endif; ?>
+
 
 </body>
 </html>
