@@ -158,7 +158,7 @@ if (isset($_GET['ok'])) {
 
 <form action="compte_rendu.php" method="get">
     <button type="submit" class="btn btn-primary">
-        📊 Générer le compte rendu
+         Générer le compte rendu
     </button>
 </form>
 

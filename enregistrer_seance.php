@@ -12,16 +12,16 @@ if (!isset($_POST['date_seance'])) {
 
 $date = $_POST['date_seance'];
 
-// 1️⃣ Créer la séance
+//  Créer la séance
 mysqli_query($conn, "INSERT INTO seances (date_seance) VALUES ('$date')");
 $seance_id = mysqli_insert_id($conn);
 
-// 2️⃣ Récupérer les tableaux (ou tableaux vides)
+//  Récupérer les tableaux (ou tableaux vides)
 $absents = $_POST['absent'] ?? [];
 $cahiers = $_POST['cahier'] ?? [];
 $bibles  = $_POST['bible'] ?? [];
 
-// 3️⃣ Pour chaque élève
+// Pour chaque élève
 $eleves = mysqli_query($conn, "SELECT id FROM eleves");
 while ($e = mysqli_fetch_assoc($eleves)) {
 
@@ -36,6 +36,6 @@ while ($e = mysqli_fetch_assoc($eleves)) {
         VALUES ($id, $seance_id, $absent, $pas_cahier, $pas_bible)");
 }
 
-// 4️⃣ REDIRECTION OBLIGATOIRE
+//  REDIRECTION OBLIGATOIRE
 header("Location: gestion_classe.php?ok=1");
 exit();
