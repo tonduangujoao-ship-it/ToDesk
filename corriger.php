@@ -120,7 +120,7 @@ function afficherErreurs(matches) {
     liste.innerHTML = "";
 
     if (matches.length === 0) {
-        liste.innerHTML = "<li class='list-group-item text-success'>Aucune erreur trouvée 🎉</li>";
+        liste.innerHTML = "<li class='list-group-item text-success'>Aucune erreur trouvée</li>";
         return;
     }
 
@@ -176,7 +176,7 @@ document.getElementById("copier").addEventListener("click", () => {
     texteArea.select();
     document.execCommand("copy");
 
-    alert("Texte corrigé copié ✅");
+    alert("Texte corrigé copié");
 });
 </script>
 <div style="position:absolute; top:3%; right:5%;">

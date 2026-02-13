@@ -29,13 +29,14 @@ $result = mysqli_query($conn, $sql);
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Classeur de Devoirs</title>
+    <title>ToDesk</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="CSS/core.css" rel="stylesheet">
     <style>
         .bt{ position:relative; left: 4%;}
         .logo { display:block; margin:auto; width:180px; border-radius:10px; }
         .logo2 { display:block; margin-left:5px; width:180px; border-radius:10px; position:absolute; top:-15%; }
+        .Cp{text-align:center; position:relative; bottom: 0; color: red; }
     </style>
     <!-- JS pour changer de theme-->
 <!-- JS pour changer de theme-->
@@ -120,7 +121,6 @@ function applyThemeToClass(theme) {
     </div>
 
     <h1 class="text-center mb-2 text-primary texttheme">Classeur MMI</h1>
-    <h4 class="text-center mb-4 texttheme">Made By Joao Tonduangu</h4>
     <h5 class="text-center mb-4 texttheme">
         En poursuivant votre navigation sur ce site, vous acceptez l’utilisation de traceurs pour vous permettre l'utilisation de ToDesk
         <span style="color:red;"><br>Connectez-vous pour plus d'options</span>
@@ -227,6 +227,8 @@ function applyThemeToClass(theme) {
         Gestion de classe
     </a>
 <?php endif; ?>
+
+<h6 class="Cp">© Copyright Joao Tonduangu 2025</h6>
 
 
 </body>

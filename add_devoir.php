@@ -7,7 +7,7 @@ if(!isset($_SESSION['role']) || $_SESSION['role'] != 'delegue'){
 }
 
 if(isset($_POST['submit'])){
-
+    //
     $titre = trim($_POST['titre']);
     $date_rendu = $_POST['date_rendu'];
     $description = trim($_POST['description']);
@@ -96,28 +96,28 @@ function applyThemeToClass(theme) {
 </head>
 
 <body>
-<div class="container mt-4">
+<div class="container mt-4 texttheme">
 
-<h2 class="text-primary text-center mb-4">➕ Ajouter un devoir</h2>
+<h2 class="text-primary text-center mb-4 texttheme"> Ajouter un devoir</h2>
 
-<a href="index.php" class="btn btn-secondary mb-3">⬅ Retour</a>
+<a href="index.php" class="btn btn-secondary mb-3"> Retour</a>
 
-<form method="post" enctype="multipart/form-data" class="card p-4 shadow">
+<form method="post" enctype="multipart/form-data" class="card p-4 shadow texttheme">
 
     <label class="form-label">Titre</label>
-    <input type="text" name="titre" class="form-control" required>
+    <input type="text" name="titre" class="form-control texttheme" required>
 
-    <label class="form-label mt-3">Date de rendu</label>
-    <input type="date" name="date_rendu" class="form-control" required>
+    <label class="form-label mt-3 texttheme">Date de rendu</label>
+    <input type="date" name="date_rendu" class="form-control texttheme" required>
 
-    <label class="form-label mt-3">Description</label>
-    <textarea name="description" class="form-control" rows="4"></textarea>
+    <label class="form-label mt-3 texttheme">Description</label>
+    <textarea name="description texttheme" class="form-control texttheme" rows="4"></textarea>
 
-    <label class="form-label mt-3">Joindre un fichier</label>
-    <input type="file" name="fichier" class="form-control">
+    <label class="form-label mt-3 texttheme">Joindre un fichier</label>
+    <input type="file" name="fichier" class="form-control texttheme">
 
-     <label class="form-label mt-3">Joindre un exemple</label>
-    <input type="file" name="exemple" class="form-control">
+     <label class="form-label mt-3 texttheme">Joindre un exemple</label>
+    <input type="file" name="exemple" class="form-control texttheme">
 
     <button type="submit" name="submit" class="btn btn-success mt-4">
         ✔ Enregistrer le devoir
@@ -126,8 +126,8 @@ function applyThemeToClass(theme) {
 </form>
 
 </div>
-<div style="position:absolute; height:auto; width:10%; aspect-ratio:1/1; bottom:0; left:0">
-    <img src="img/sun.svg" onclick="toggleTheme()" draggable="false" id="themebut" style="height:auto; width:auto;" alt="music">
+<!--<div style="position:absolute; height:auto; width:10%; aspect-ratio:1/1; bottom:0; left:0">
+    <img src="img/sun.svg" onclick="toggleTheme()" draggable="false" id="themebut" style="height:auto; width:auto;" alt="music"> -->
 </div>
 </body>
 </html>
