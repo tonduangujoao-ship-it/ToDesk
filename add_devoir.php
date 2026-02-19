@@ -111,7 +111,7 @@ function applyThemeToClass(theme) {
     <input type="date" name="date_rendu" class="form-control texttheme" required>
 
     <label class="form-label mt-3 texttheme">Description</label>
-    <textarea name="description texttheme" class="form-control texttheme" rows="4"></textarea>
+    <textarea name="description" class="form-control texttheme" rows="4"></textarea>
 
     <label class="form-label mt-3 texttheme">Joindre un fichier</label>
     <input type="file" name="fichier" class="form-control texttheme">

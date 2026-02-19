@@ -120,7 +120,7 @@ function applyThemeToClass(theme) {
         ?>
     </div>
 
-    <h1 class="text-center mb-2 text-primary texttheme">Classeur MMI</h1>
+    <h1 class="text-center mb-2 text-primary texttheme">ToDesk</h1>
     <h5 class="text-center mb-4 texttheme">
         En poursuivant votre navigation sur ce site, vous acceptez l’utilisation de traceurs pour vous permettre l'utilisation de ToDesk
         <span style="color:red;"><br>Connectez-vous pour plus d'options</span>
