@@ -87,8 +87,8 @@ function applyThemeToClass(theme) {
 <pre class="border p-3 bg-light"><?= htmlspecialchars($texte) ?></pre>
 
 <a href="index.php" class="btn btn-secondary mt-3">Retour</a>
-<div style="position:absolute; height:auto; width:10%; aspect-ratio:1/1; bottom:0; left:0">
+<!--<div style="position:absolute; top:3%; right:5%;">
     <img src="img/sun.svg" onclick="toggleTheme()" draggable="false" id="themebut" style="height:auto; width:auto;" alt="music">
-</div>
+</div>-->
 </body>
 </html>

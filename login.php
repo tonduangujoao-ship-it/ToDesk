@@ -112,9 +112,9 @@ Mot de passe :
 <?php
 if(isset($msg)) echo "<p style='color:red;'>$msg</p>";
 ?>
-<div style="position:absolute; height:auto; width:10%; aspect-ratio:1/1; bottom:0; left:0">
+<!--<div style="position:absolute; top:3%; right:5%;">
     <img src="img/sun.svg" onclick="toggleTheme()" draggable="false" id="themebut" style="height:auto; width:auto;" alt="music">
-</div>
+</div>-->
 </body>
 </
 

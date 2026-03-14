@@ -37,64 +37,47 @@ $result = mysqli_query($conn, $sql);
         .logo { display:block; margin:auto; width:180px; border-radius:10px; }
         .logo2 { display:block; margin-left:5px; width:180px; border-radius:10px; position:absolute; top:-15%; }
         .Cp{text-align:center; position:relative; bottom: 0; color: red; }
+
+
+        .urgent-row td{
+            background-color: #ff4b4b; /* jaune clair */
+            font-weight: bold;
+            
+            overflow: hidden; 
+            animation: softShake 0.6s infinite ease-in-out;
+            transform: scale(1);
+            transition: 0.2s ease;
+            cursor: pointer;
+
+        }
+      
+        
+        .table-rounded {
+            border: 4px solid #000000;
+            display: inline-block;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 20px rgba(0,0,0,0.25);
+
+        }
+
+
+        @keyframes softShake {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-0.7px); }
+            50% { transform: translateX(0.7px); }
+            75% { transform: translateX(-0.7px); }
+            100% { transform: translateX(0); }
+    
+        }
+
+        .tr {
+            background-color: #0a1a33;
+            color: white;             
+        }
+       
     </style>
-    <!-- JS pour changer de theme-->
-<!-- JS pour changer de theme-->
-<script>
-window.addEventListener('DOMContentLoaded', function() {
-  const theme = localStorage.getItem("theme") || "light";
-
-  applyTheme(theme);
-});
-
-function toggleTheme() {
-  const currentTheme = localStorage.getItem("theme") || "light";
-  const newTheme = (currentTheme === "dark") ? "light" : "dark";
-
-  localStorage.setItem("theme", newTheme);
-  applyTheme(newTheme);
-}
-
-// applique le theme global
-function applyTheme(theme) {
-
-  const themeBtn = document.getElementById("themebut");
-
-  // Sécurité : taille fixe du bouton (évite l’icône géante)
-  themeBtn.style.width = "60px";
-  themeBtn.style.height = "60px";
-  themeBtn.style.cursor = "pointer";
-
-  if (theme === "dark") {
-    document.body.style.backgroundColor = "#1e1e2f";
-    document.body.style.color = "#ffffff";
-    themeBtn.src = "img/moon.svg";
-    applyThemeToClass("dark");
-  } else {
-    document.body.style.backgroundColor = "#ffffff";
-    document.body.style.color = "#000000";
-    themeBtn.src = "img/sun.svg";
-    applyThemeToClass("light");
-  }
-}
-
-// applique le theme aux éléments qui ont une certaine class
-function applyThemeToClass(theme) {
-  const elements = document.querySelectorAll(".texttheme");
-
-  elements.forEach(element => {
-    if (theme === "dark") {
-      element.style.color = "#ffffff";
-      element.style.backgroundColor = "transparent";
-    } else {
-      element.style.color = "#000000";
-      element.style.backgroundColor = "transparent";
-    }
-  });
-}
-</script>
-
-
+    
 </head>
 
 <body style="background-color: white;">
@@ -148,32 +131,35 @@ function applyThemeToClass(theme) {
 
     <!-- Tableau des devoirs -->
     <div class="table-responsive mt-4">
-        <table class="table table-bordered table-hover">
-            <thead class="table-light text-center">
-                <tr>
-                    <th class="texttheme">Titre</th>
-                    <th class="texttheme">Date de rendu</th>
-                    <th class="texttheme">Description</th>
-                    <th class="texttheme">Fichier</th>
-                    <th class="texttheme">Exemple</th>
-                    <?php if ($role == 'delegue') echo "<th class='texttheme'>Actions</th>"; ?>
+        <table class="table table-bordered table-hover table-rounded">
+            <thead class="text-center tr">
+                <tr class="tr">
+                    <th class="tr">Titre</th>
+                    <th class="tr">Date de rendu</th>
+                    <th class="tr">Description</th>
+                    <th class="tr">Fichier</th>
+                    <th class="tr">Exemple</th>
+                    <?php if ($role == 'delegue') echo "<th class='tr'>Actions</th>"; ?>
                 </tr>
             </thead>
 
             <tbody>
             <?php
             if (mysqli_num_rows($result) > 0) {
+                $index = 0;
                 while ($row = mysqli_fetch_assoc($result)) {
+                    // Ajouter une classe spéciale aux 3 premiers devoirs
+                   $highlight = ($index < 3) ? "urgent-row" : "";
+                   echo "<tr class='$highlight'>";
+                   $index++;
 
-                    echo "<tr>";
-
-                   echo "<td class='texttheme'>" . htmlspecialchars($row['titre']) . "</td>";
-                   echo "<td class='texttheme'>" . htmlspecialchars($row['date_rendu']) . "</td>";
-                   echo "<td class='texttheme'>" . htmlspecialchars($row['description']) . "</td>";
+                   echo "<td class='tr'>" . htmlspecialchars($row['titre']) . "</td>";
+                   echo "<td class='tr'>" . htmlspecialchars($row['date_rendu']) . "</td>";
+                   echo "<td class='tr'>" . htmlspecialchars($row['description']) . "</td>";
 
 
                     // Colonne Fichier
-                    echo "<td class='text-center texttheme'>";
+                    echo "<td class='text-center tr'>";
                     if (!empty($row['fichier'])) {
                         echo "<a href='uploads/" . htmlspecialchars($row['fichier']) . "' 
                                 target='_blank' 
@@ -184,7 +170,7 @@ function applyThemeToClass(theme) {
                     echo "</td>";
 
                     // Colonne Exemple
-                    echo "<td class='text-center texttheme'>";
+                    echo "<td class='text-center tr'>";
                     if (!empty($row['exemple'])) {
                         echo "<a href='uploads/" . htmlspecialchars($row['exemple']) . "' 
                                 target='_blank' 
@@ -196,7 +182,7 @@ function applyThemeToClass(theme) {
 
                     // Actions délégué
                     if ($role == 'delegue') {
-                        echo "<td class='text-center texttheme'>
+                        echo "<td class='text-center tr'>
                                 <a href='edit.php?id=" . $row['id'] . "' class='btn btn-warning btn-sm me-1'>Modifier</a>
                                 <a href='delete.php?id=" . $row['id'] . "' class='btn btn-danger btn-sm'
                                    onclick=\"return confirm('Supprimer ce devoir ?');\">Supprimer</a>
@@ -218,9 +204,9 @@ function applyThemeToClass(theme) {
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<div style="position:absolute; top:3%; right:5%;">
+<!--<div style="position:absolute; top:3%; right:5%;">
     <img src="img/sun.svg" onclick="toggleTheme()" draggable="false" id="themebut" style="height:auto; width:auto;" alt="music">
-</div> 
+</div>-->
 
 <?php if ($role === 'delegue'): ?>
     <a href="verif_gestion.php" class="btn btn-warning mt-3 bt">

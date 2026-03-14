@@ -94,8 +94,8 @@ function applyThemeToClass(theme) {
         <input type="submit" name="submit" value="Uploader">
     </form>
     <p style="text-align:center;"><a href="index.php">Retour à la liste des devoirs</a></p>
-    <div style="position:absolute; height:auto; width:10%; aspect-ratio:1/1; bottom:0; left:0">
+<!--<div style="position:absolute; top:3%; right:5%;">
     <img src="img/sun.svg" onclick="toggleTheme()" draggable="false" id="themebut" style="height:auto; width:auto;" alt="music">
-</div>
+</div>-->
 </body>
 </html>

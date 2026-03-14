@@ -1,0 +1,54 @@
+<script>
+window.addEventListener('DOMContentLoaded', function() {
+  const theme = localStorage.getItem("theme") || "light";
+
+  applyTheme(theme);
+  
+});
+
+function toggleTheme() {
+  const currentTheme = localStorage.getItem("theme") || "light";
+  const newTheme = (currentTheme === "dark") ? "light" : "dark";
+
+  localStorage.setItem("theme", newTheme);
+  applyTheme(newTheme);
+}
+
+// applique le theme global
+function applyTheme(theme) {
+
+  const themeBtn = document.getElementById("themebut");
+
+  // Sécurité : taille fixe du bouton (évite l’icône géante)
+  themeBtn.style.width = "60px";
+  themeBtn.style.height = "60px";
+  themeBtn.style.cursor = "pointer";
+
+  if (theme === "dark") {
+    document.body.style.backgroundColor = "#1e1e2f";
+    document.body.style.color = "#ffffff";
+    themeBtn.src = "img/moon.svg";
+    applyThemeToClass("dark");
+  } else {
+    document.body.style.backgroundColor = "#ffffff";
+    document.body.style.color = "#000000";
+    themeBtn.src = "img/sun.svg";
+    applyThemeToClass("light");
+  }
+}
+
+// applique le theme aux éléments qui ont une certaine class
+function applyThemeToClass(theme) {
+  const elements = document.querySelectorAll(".texttheme");
+
+  elements.forEach(element => {
+    if (theme === "dark") {
+      element.style.color = "#ffffff";
+      element.style.backgroundColor = "transparent";
+    } else {
+      element.style.color = "#000000";
+      element.style.backgroundColor = "transparent";
+    }
+  });
+}
+</script>

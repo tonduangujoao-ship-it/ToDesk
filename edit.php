@@ -159,9 +159,9 @@ function applyThemeToClass(theme) {
 <body>
 <div class="container mt-4 texttheme">
 
-<h2 class="text-warning text-center mb-4 texttheme">✏ Modifier le devoir</h2>
+<h2 class="text-warning text-center mb-4 texttheme">Modifier le devoir</h2>
 
-<a href="index.php" class="btn btn-secondary mb-3">⬅ Retour</a>
+<a href="index.php" class="btn btn-secondary mb-3">Retour</a>
 
 <form method="post" enctype="multipart/form-data" class="card p-4 shadow texttheme">
 
@@ -214,8 +214,8 @@ function applyThemeToClass(theme) {
 
 </div>
 
-<div style="position:absolute; top:3%; right:5%;">
+<!--<div style="position:absolute; top:3%; right:5%;">
     <img src="img/sun.svg" onclick="toggleTheme()" draggable="false" id="themebut" style="height:auto; width:auto;" alt="music">
-</div>
+</div>-->
 </body>
 </html>
