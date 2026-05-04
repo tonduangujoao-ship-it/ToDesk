@@ -1,8 +1,6 @@
 <?php
-
+ob_clean();
 require_once '../db.php';
-
-
 function getDevoirs($pdo) {
     $stmt = $pdo->prepare("SELECT * FROM devoirs ORDER BY date_rendu ASC");
     $stmt->execute();
@@ -27,3 +25,5 @@ try {
         "message" => "Erreur serveur"
     ]);
 }
+ob_end_flush();
+exit;
